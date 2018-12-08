@@ -20,6 +20,8 @@
         </activity>
         <activity android:name=".LessonActivity">
         </activity>
+        <activity android:name=".SegmentsActivity">
+        </activity>
     </application>
 
 </manifest>

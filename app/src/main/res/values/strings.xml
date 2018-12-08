@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">drilldown-android</string>
+    <string name="app_name">drillDown</string>
     <string name="title_activity_lesson">LessonActivity</string>
 </resources>

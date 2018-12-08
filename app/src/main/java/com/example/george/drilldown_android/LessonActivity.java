@@ -109,10 +109,8 @@ public class LessonActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson);
 
-        setContentView(R.layout.activity_lesson);
         Intent intent = getIntent();
         topicId = intent.getStringExtra("id");
-        Log.i("my",topicId);
 
         playBtn = (Button) findViewById(R.id.playBtn);
         topicPlayerImageView = (ImageView) findViewById(R.id.topicPlayerImageView);

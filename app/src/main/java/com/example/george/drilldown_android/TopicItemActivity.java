@@ -19,6 +19,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,11 +27,14 @@ public class TopicItemActivity extends AppCompatActivity {
 
     private String baseUrl = "http://10.0.2.2:8080";
     private String topicId = "5b52d055107696026b43b44d";
+    private int numOfSegments = 0;
 
     ImageView topicImageView;
     TextView topicTitleView;
     TextView topicDescView;
-    Button startLessonButton;
+    Button goToLessonButton;
+    Button goToSegmentsButton;
+
 
     RequestQueue mQueue;
 
@@ -42,19 +46,31 @@ public class TopicItemActivity extends AppCompatActivity {
         topicImageView = (ImageView) findViewById(R.id.topicImageView);
         topicTitleView = (TextView) findViewById(R.id.topicTitleView);
         topicDescView = (TextView) findViewById(R.id.topicDescView);
-        startLessonButton = (Button) findViewById(R.id.startLessonButton);
+        goToLessonButton = (Button) findViewById(R.id.goToLessonButton);
+        goToSegmentsButton = (Button) findViewById(R.id.goToSegmentsButton);
 
-        startLessonButton.setOnClickListener(startLesson);
+        goToLessonButton.setOnClickListener(goToLesson);
+        goToSegmentsButton.setOnClickListener(goToSegments);
 
         mQueue = Volley.newRequestQueue(this);
         getTopic();
     }
 
-    OnClickListener startLesson = new OnClickListener() {
+    OnClickListener goToLesson = new OnClickListener() {
         @Override
         public void onClick(View view) {
             Intent myIntent = new Intent(TopicItemActivity.this, LessonActivity.class);
             myIntent.putExtra("id",topicId);
+            startActivity(myIntent);
+        }
+    };
+
+    OnClickListener goToSegments = new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent myIntent = new Intent(TopicItemActivity.this, SegmentsActivity.class);
+            myIntent.putExtra("id",topicId);
+            myIntent.putExtra("count",numOfSegments);
             startActivity(myIntent);
         }
     };
@@ -69,6 +85,9 @@ public class TopicItemActivity extends AppCompatActivity {
                     String title = topic.getString("title");
                     String image = topic.getString("image");
                     String desc = topic.getString("about");
+
+                    JSONArray segments = topic.getJSONArray("segments");
+                    numOfSegments = segments.length();
 
                     Picasso.get().load(baseUrl + "/" + image).into(topicImageView);
                     topicTitleView.setText(title);
