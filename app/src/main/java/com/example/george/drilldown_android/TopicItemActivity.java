@@ -1,5 +1,6 @@
 package com.example.george.drilldown_android;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -52,21 +53,18 @@ public class TopicItemActivity extends AppCompatActivity {
     OnClickListener startLesson = new OnClickListener() {
         @Override
         public void onClick(View view) {
+            Intent myIntent = new Intent(TopicItemActivity.this, LessonActivity.class);
+            myIntent.putExtra("id",topicId);
+            startActivity(myIntent);
         }
     };
 
     private void getTopic(){
         String url = baseUrl + "/topics/" + topicId;
-        Log.i("ok","start");
-
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    Log.i("ok","here");
-
-                    Log.i("ok",response.toString());
-
                     JSONObject topic = response.getJSONObject("topic");
                     String title = topic.getString("title");
                     String image = topic.getString("image");
@@ -83,9 +81,7 @@ public class TopicItemActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("ok","not here");
-
-                //error.printStackTrace();
+                error.printStackTrace();
             }
         });
 
