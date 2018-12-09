@@ -26,7 +26,7 @@ import org.json.JSONObject;
 public class TopicItemActivity extends AppCompatActivity {
 
     private String baseUrl = "http://10.0.2.2:8080";
-    private String topicId = "5b52d055107696026b43b44d";
+    private String topicId;
     private int numOfSegments = 0;
 
     ImageView topicImageView;
@@ -42,6 +42,9 @@ public class TopicItemActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_item);
+
+        Intent intent = getIntent();
+        topicId = intent.getStringExtra("id");
 
         topicImageView = (ImageView) findViewById(R.id.topicImageView);
         topicTitleView = (TextView) findViewById(R.id.topicTitleView);
