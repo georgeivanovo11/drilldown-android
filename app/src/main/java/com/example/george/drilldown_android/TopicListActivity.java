@@ -2,11 +2,13 @@ package com.example.george.drilldown_android;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -20,13 +22,15 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 public class TopicListActivity extends AppCompatActivity {
 
     private String baseUrl = "http://10.0.2.2:8080";
-
+    Button search_btn;
+    TextInputEditText textEdit;
 
     ListView list;
 
@@ -42,6 +46,21 @@ public class TopicListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_list);
+
+        search_btn = (Button) findViewById(R.id.search_btn);
+        search_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    search();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        textEdit = (TextInputEditText) findViewById(R.id.search_str);
+
 
         titles = new ArrayList<>();
         ids = new ArrayList<>();
@@ -79,6 +98,43 @@ public class TopicListActivity extends AppCompatActivity {
                         JSONObject topic = topics.getJSONObject(i);
                         Log.i("1",topic.toString());
 
+                        titles.add(topic.getString("title"));
+                        urls.add(topic.getString("image"));
+                        ids.add(topic.getString("_id"));
+                        JSONArray segments = topic.getJSONArray("segments");
+                        counts.add(segments.length() + " segments");
+                    }
+                    adapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        mQueue.add(request);
+    }
+
+    private void search() throws JSONException {
+        JSONObject obj = new JSONObject();
+        obj.put("string", textEdit.getText().toString());
+        final String url = baseUrl + "/topics/mobile-search";
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, obj, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    JSONArray topics = response.getJSONArray("topics");
+                    titles.clear();
+                    ids.clear();
+                    counts.clear();
+                    urls.clear();
+                    for(int i=0; i<topics.length(); i++){
+                        JSONObject topic = topics.getJSONObject(i);
                         titles.add(topic.getString("title"));
                         urls.add(topic.getString("image"));
                         ids.add(topic.getString("_id"));
