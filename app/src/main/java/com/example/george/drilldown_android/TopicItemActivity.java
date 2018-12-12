@@ -62,7 +62,7 @@ public class TopicItemActivity extends AppCompatActivity {
     OnClickListener goToLesson = new OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent myIntent = new Intent(TopicItemActivity.this, LessonActivity.class);
+            Intent myIntent = new Intent(TopicItemActivity.this, ChooseLessonActivity.class);
             myIntent.putExtra("id",topicId);
             startActivity(myIntent);
         }
